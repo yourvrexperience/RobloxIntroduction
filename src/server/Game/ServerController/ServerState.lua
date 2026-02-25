@@ -1,0 +1,78 @@
+-- ServerState.lua
+local ServerState = {}
+ServerState.__index = ServerState
+
+function ServerState:init(controller)
+	self.controller = controller
+	self.enable_debug_messages = false
+end
+
+function ServerState:setPhase(newPhase: string, data: any)
+	local c = self.controller
+	c.currentPhase = newPhase
+	c.Events:phaseChange(newPhase, data)
+	c.ServerUpdate:stateChanged()
+	if self.enable_debug_messages then
+		print("[ServerState] Phase ->", newPhase)
+	end
+end
+
+function ServerState:enterLoad()
+	if self.enable_debug_messages then
+		print("[ServerState:enterLoad]")
+	end
+	local c = self.controller
+	if c.isTransitioning then return end
+	c.isTransitioning = true
+	local playerList = c.Players:GetPlayers()
+
+	task.wait(0.2)
+	self:setPhase(c.constants.Phase.LOAD, "")
+
+	-- Loading/Initializing resources
+	c.TeamAssignment:assignTeams(playerList)
+	c.TeamAssignment:setupAllMarkers()
+	
+	-- Change to GAME
+	task.wait(1)
+	self:setPhase(c.constants.Phase.GAME, "")
+
+	c.isTransitioning = false
+end
+
+function ServerState:enterGameOver()
+	if self.enable_debug_messages then
+		print("[ServerState:enterGameOver]")
+	end
+	local c = self.controller
+	if c.isTransitioning then return end
+	c.isTransitioning = true
+
+	self:setPhase(c.constants.Phase.GAME_OVER, "")
+
+	c.isTransitioning = false
+end
+
+
+function ServerState:reloadMenu()
+	if self.enable_debug_messages then
+		print("[ServerState:reloadMenu]")
+	end
+	local c = self.controller
+	if c.isTransitioning then return end
+	c.isTransitioning = true
+	
+	self:setPhase(c.constants.Phase.MENU, "")
+	
+	if c.TeamAssignment then
+		c.TeamAssignment:clearMarkers()
+	end
+	
+	if c.PlayerCollision then
+		c.PlayerCollision:resetRound()
+	end
+
+	c.isTransitioning = false
+end
+
+return setmetatable({}, ServerState)

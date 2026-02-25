@@ -1,0 +1,51 @@
+local ClientEvents = {}
+ClientEvents.__index = ClientEvents
+
+function ClientEvents:init(controller)
+	self.controller = controller
+	self.enable_debug_messages = false
+	
+	self.remotes = self.controller.ReplicatedStorage:WaitForChild("RemoteEvents")
+	self.phaseChanged = self.remotes:WaitForChild("GamePhaseChanged")
+	self.serverEvents = self.remotes:WaitForChild("ServerEvents")
+	self.clientEvents = self.remotes:WaitForChild("ClientEvents")
+
+	self.serverEvents.OnClientEvent:Connect(function(text, data)
+		self:onListenEvent(text, data)
+	end)
+
+	self.phaseChanged.OnClientEvent:Connect(function(newPhase, data)
+		self:onPhaseChanged(newPhase, data)
+	end)
+end
+
+function ClientEvents:onListenEvent(event: string, data: any)
+	if self.enable_debug_messages then 
+		print("[ListenMessage] EVENT=", event, " DATA=", data)
+	end
+
+	-- EVAL RESPONSE_STATE
+	if event == self.controller.constants.Events.RESPONSE_STATE then
+		if self.enable_debug_messages then 
+			print(("[ClientEvents:onListenEvent] state %s, time (%s)"):format(data.state, tostring(data.time)))		
+		end
+		self:onPhaseChanged(data.state, data)
+	end
+	-- EVAL COLLISION_PLAYERS
+	if event == self.controller.constants.Events.COLLISION_PLAYERS then		
+		if self.enable_debug_messages then 
+			print(("[ClientEvents:onListenEvent] COLLISION_PLAYERS %s hit %s"):format(data.playerA, data.playerB))
+		end
+		self.controller.Audio:play2D(self.controller.constants.Sounds.SOUND_FX_OUCH)		
+	end
+end
+
+function ClientEvents:onPhaseChanged(newPhase: string, data: any)
+	self.controller.StateChanged:ChangePhase(newPhase, data)
+end
+
+function ClientEvents:sendEvent(text: string, data: any)
+	self.clientEvents:FireServer(text, data)
+end
+
+return setmetatable({}, ClientEvents)
