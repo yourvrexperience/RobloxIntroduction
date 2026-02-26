@@ -32,19 +32,16 @@ function ClientEvents:onListenEvent(event: string, data: any)
 		end
 		self:onPhaseChanged(data.state, data)
 	end
-	-- EVAL COLLISION_PLAYERS
-	if event == self.controller.constants.Events.COLLISION_PLAYERS then		
-		if self.enable_debug_messages then 
-			print(("[ClientEvents:onListenEvent] COLLISION_PLAYERS %s hit %s"):format(data.playerA, data.playerB))
-		end
-		self.controller.Audio:play2D(self.controller.constants.Sounds.SOUND_FX_OUCH)		
-	end
 	-- EVAL PLAYER_HITS_BALL 
 	if event == self.controller.constants.Events.PLAYER_HITS_BALL then
 		print(("[ClientEvents:onListenEvent] PLAYER_HITS_BALL %s hit %s"):format(data.playerName, data.ballName)) 
 		if data.playerName == self.controller.localPlayer.Name then
 			self.controller.Audio:play2D(self.controller.constants.Sounds.SOUND_FX_KICK) 
 		end 
+	end	
+	-- EVAL BALL_TAKEN 
+	if event == self.controller.constants.Events.BALL_TAKEN then
+		self.controller.Audio:play2D(self.controller.constants.Sounds.SOUND_FX_OUCH) 
 	end	
 end
 

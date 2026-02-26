@@ -70,26 +70,47 @@ function PlayerCollision:_onTouched(playerA: Player, hit: BasePart)
 	if self.enable_debug_messages then
 		print(("[PlayerCollision] %s(%s) hit %s(%s)"):format(playerA.Name, info.teamA or "NO_TEAM", playerB.Name, info.teamB or "NO_TEAM"))
 	end
-	
-	-- Broadcast collision between players to the clients
-	self.controller.Events:broadcast(self.controller.constants.Events.COLLISION_PLAYERS, {
-																							playerA = playerA.Name,
-																							playerB = playerB.Name
-	})
+
+	-- Must have teams and be opposite teams 
+	if not playerA.Team or not playerB.Team then return end 
+	if self.controller.utilities:sameTeam(playerA, playerB) then return end 
+
+	local bm = self.controller.BallManager
+	if not bm then return end 
+
+	local carryingA = bm:isCarrying(playerA) 
+	local carryingB = bm:isCarrying(playerB)
+
+	-- We only care when exactly one is carrying 
+	if carryingA == carryingB then return end 
+
+	local carrier = carryingA and playerA or playerB 
+	local tackler = carryingA and playerB or playerA 
+
+	local ball = bm:getCarriedBall(carrier) 
+	if not ball then return end 
+
+	-- Force the carrier to throw 
+	ball:forceThrowFromPlayer(carrier)
+	self.controller.Events:sendTo(carrier, self.controller.constants.Events.BALL_TAKEN) 
+	print(("[TACKLE] %s tackled %s -> forced throw"):format(tackler.Name, carrier.Name))
 end
 
-function PlayerCollision:getCollisionInfo(playerA: Player, playerB: Player)
-	local bm = self.controller.BallManager
+function PlayerCollision:getCollisionInfo(playerA: Player, playerB: Player) 
+	local bm = self.controller.BallManager 
+	local teamA = playerA.Team and playerA.Team.Name or nil 
+	local teamB = playerB.Team and playerB.Team.Name or nil 
 
-	local teamA = playerA.Team and playerA.Team.Name or nil
-	local teamB = playerB.Team and playerB.Team.Name or nil
+	local carryingA = bm and bm.isCarrying and bm:isCarrying(playerA) or false 
+	local carryingB = bm and bm.isCarrying and bm:isCarrying(playerB) or false 
 
-	return {
-		playerA = playerA,
-		playerB = playerB,
-		teamA = teamA,
-		teamB = teamB
-	}
+	return { playerA = playerA, 
+			playerB = playerB, 
+			teamA = teamA, 
+			teamB = teamB, 
+			carryingA = carryingA, 
+			carryingB = carryingB, 
+		} 
 end
 
 return setmetatable({}, PlayerCollision)
