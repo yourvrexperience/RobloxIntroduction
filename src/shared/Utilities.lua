@@ -47,4 +47,27 @@ function Utilities:tweenProps(instances, tweenInfo, props)
 	end
 end
 
+function Utilities:setPhysicsRecursive(inst: Instance)
+	if inst:IsA("BasePart") then
+		inst.Anchored = false
+		inst.CanCollide = true
+		inst.AssemblyLinearVelocity = Vector3.zero
+		inst.AssemblyAngularVelocity = Vector3.zero
+	end
+
+	for _, child in ipairs(inst:GetChildren()) do
+		self:setPhysicsRecursive(child)
+	end
+end
+
+function Utilities:getBasePart(ball: Instance): BasePart?
+	if ball:IsA("BasePart") then
+		return ball
+	end
+	if ball:IsA("Model") then
+		return ball.PrimaryPart or ball:FindFirstChildWhichIsA("BasePart")
+	end
+	return nil
+end
+
 return Utilities

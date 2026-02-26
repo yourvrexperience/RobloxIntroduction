@@ -32,6 +32,7 @@ function ServerState:enterLoad()
 	-- Loading/Initializing resources
 	c.TeamAssignment:assignTeams(playerList)
 	c.TeamAssignment:setupAllMarkers()
+	self.controller.BallSpawner:respawn(6)
 	
 	-- Change to GAME
 	task.wait(1)
@@ -49,6 +50,8 @@ function ServerState:enterGameOver()
 	c.isTransitioning = true
 
 	self:setPhase(c.constants.Phase.GAME_OVER, "")
+
+	self.controller.BallSpawner:clear()
 
 	c.isTransitioning = false
 end
