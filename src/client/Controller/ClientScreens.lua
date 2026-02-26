@@ -61,7 +61,19 @@ function ClientScreens:init(controller)
 		local gameGui = self.screens[self.controller.constants.Screen.GAME]
 		local gameHUD = gameGui:WaitForChild("GameHUD")
 		self.gameTime = gameHUD:WaitForChild("Time")
-		
+		self.buttonAskForBall = gameGui:WaitForChild("ButtonAskForBall") 
+
+		self.buttonAskForBall.MouseButton1Click:Connect(function() 
+			if self.buttonAskForBall.Active then 
+				self.buttonAskForBall.Active = false 
+				self.buttonAskForBall.AutoButtonColor = false 
+				self.controller.Events:sendEvent(self.controller.constants.Events.REQUEST_NEW_BALL, "")
+				task.wait(0.5) 
+				self.buttonAskForBall.Active = true 
+				self.buttonAskForBall.AutoButtonColor = true
+			end 
+		end)
+
 		gameHUD.MouseButton1Click:Connect(function()
 			if gameHUD.Active then
 				gameHUD.Active = false

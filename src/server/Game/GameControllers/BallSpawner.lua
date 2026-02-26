@@ -164,6 +164,12 @@ function BallSpawner:_attachKickBehavior(ballInstance: Instance)
 		local spinStrength = 6
 		local spinAxis = Vector3.new(0, 1, 0)
 		ballPart:ApplyAngularImpulse(spinAxis * (spinStrength * mass))
+
+		self.controller.Events:broadcast(self.controller.constants.Events.PLAYER_HITS_BALL, 
+		{ 
+			playerName = player.Name,
+			ballName = ballInstance.Name, 
+		})		
 	end)
 end
 

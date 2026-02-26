@@ -69,6 +69,14 @@ function ServerEvents:onClientEvent(player: Player, event: string, data: any)
 		self.controller.State:enterGameOver()
 		return
 	end
+	-- EVAL EVENT REQUEST_NEW_BALL 
+	if event == self.controller.constants.Events.REQUEST_NEW_BALL then 
+		if self.enable_debug_messages then 
+			print(("[ServerEvents:onClientEvent] REQUEST_NEW_BALL from %s"):format(player.Name))
+		end 
+		self.controller.BallSpawner:spawn(1) 
+		return 
+	end	
 	
 	-- Example: broadcast to everyone (including sender)
 	local out = ("%s: %s"):format(player.Name, event)

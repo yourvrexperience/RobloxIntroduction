@@ -38,6 +38,13 @@ function ClientEvents:onListenEvent(event: string, data: any)
 		end
 		self.controller.Audio:play2D(self.controller.constants.Sounds.SOUND_FX_OUCH)		
 	end
+	-- EVAL PLAYER_HITS_BALL 
+	if event == self.controller.constants.Events.PLAYER_HITS_BALL then
+		print(("[ClientEvents:onListenEvent] PLAYER_HITS_BALL %s hit %s"):format(data.playerName, data.ballName)) 
+		if data.playerName == self.controller.localPlayer.Name then
+			self.controller.Audio:play2D(self.controller.constants.Sounds.SOUND_FX_KICK) 
+		end 
+	end	
 end
 
 function ClientEvents:onPhaseChanged(newPhase: string, data: any)
