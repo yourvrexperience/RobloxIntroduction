@@ -56,6 +56,7 @@ function ServerUpdate:update(dt)
 		if self.enable_debug_messages then
 			print("[ServerUpdate] STATE GAME")
 		end
+		self.controller.BallManager:update(dt)
 		self.remainingTime -= dt 
 		if self.remainingTime <= 0 then
 			self.remainingTime = self.controller.constants.Game.RELOAD_TIME

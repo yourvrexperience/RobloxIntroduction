@@ -32,8 +32,19 @@ function ServerState:enterLoad()
 	-- Loading/Initializing resources
 	c.TeamAssignment:assignTeams(playerList)
 	c.TeamAssignment:setupAllMarkers()
-	self.controller.BallSpawner:respawn(6)
+	-- self.controller.BallSpawner:respawn(6)
+	-- self.controller.Ball:spawnBall(CFrame.new(10, 10, 0)) 
 	
+	-- Spawn balls local 
+	local totalBalls = math.floor(#playerList) 
+	if totalBalls == 0 then 
+		totalBalls = 1 
+	end 
+
+	for i = 1, totalBalls do 
+		self.controller.BallManager:createRandomBall() 
+	end 
+
 	-- Change to GAME
 	task.wait(1)
 	self:setPhase(c.constants.Phase.GAME, "")
@@ -51,7 +62,12 @@ function ServerState:enterGameOver()
 
 	self:setPhase(c.constants.Phase.GAME_OVER, "")
 
-	self.controller.BallSpawner:clear()
+	-- self.controller.BallSpawner:clear()
+	-- self.controller.Ball:destroy()
+
+	if c.BallManager then 
+		c.BallManager:destroyAll() 
+	end	
 
 	c.isTransitioning = false
 end

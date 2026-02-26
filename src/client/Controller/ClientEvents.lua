@@ -9,6 +9,7 @@ function ClientEvents:init(controller)
 	self.phaseChanged = self.remotes:WaitForChild("GamePhaseChanged")
 	self.serverEvents = self.remotes:WaitForChild("ServerEvents")
 	self.clientEvents = self.remotes:WaitForChild("ClientEvents")
+	self.throwBallRemote = self.remotes:WaitForChild("ThrowBall") 
 
 	self.serverEvents.OnClientEvent:Connect(function(text, data)
 		self:onListenEvent(text, data)
@@ -53,6 +54,10 @@ end
 
 function ClientEvents:sendEvent(text: string, data: any)
 	self.clientEvents:FireServer(text, data)
+end
+
+function ClientEvents:throwBall() 
+	self.throwBallRemote:FireServer() 
 end
 
 return setmetatable({}, ClientEvents)

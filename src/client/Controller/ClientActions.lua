@@ -13,6 +13,7 @@ function ClientActions:init(controller)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
 			if controller.currentPhase == controller.constants.Phase.GAME then
 				self.controller.Audio:play2D(self.controller.constants.Sounds.SOUND_FX_KICK)
+				self.controller.Events:throwBall()
 			end
 		end
 	end)	

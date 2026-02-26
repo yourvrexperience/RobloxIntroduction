@@ -9,7 +9,12 @@ function ServerEvents:init(controller)
 	self.remotePhaseChanged = remotes:WaitForChild("GamePhaseChanged")
 	self.clientEvents = remotes:WaitForChild("ClientEvents")
 	self.serverEvents = remotes:WaitForChild("ServerEvents")
+	self.throwBallRemote = remotes:WaitForChild("ThrowBall")
 
+	self.throwBallRemote.OnServerEvent:Connect(function(player)
+		self.controller.BallManager:onThrowRequest(player)
+ 	end)
+ 	
 	-- Bind start request here (only once per server)
 	local requestStart = remotes:WaitForChild("RequestStart") -- RemoteFunction
 	requestStart.OnServerInvoke = function(player)

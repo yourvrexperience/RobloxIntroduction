@@ -31,7 +31,9 @@ function Controller.get()
 	self.Events = nil
 	self.ServerUpdate = nil
 	self.PlayerCollision = nil
-	self.BallSpawner = nil 
+	-- self.BallSpawner = nil 
+	-- self.Ball = nil
+	self.BallManager = nil
 	
 	_instance = self
 	return self
@@ -44,13 +46,17 @@ function Controller:init()
 	self.TeamAssignment = require(script.Parent.GameControllers.TeamAssignment)
 	self.PlayerCollision = require(script.Parent.GameControllers.PlayerCollision)
 	self.BallSpawner = require(script.Parent.GameControllers.BallSpawner)
+ 	self.Ball = require(script.Parent.GameControllers.Ball) 
+	self.BallManager = require(script.Parent.GameControllers.BallManager) 
 
 	self.State:init(self)
 	self.Events:init(self)
 	self.ServerUpdate:init(self)
 	self.TeamAssignment:init(self)
 	self.PlayerCollision:init(self)
-	self.BallSpawner:init(self)
+	-- self.BallSpawner:init(self)
+	-- self.Ball:init(self)
+	self.BallManager:init(self)
 
 	-- Initial broadcast	
 	self.Events:phaseChange(self.currentPhase, "")
