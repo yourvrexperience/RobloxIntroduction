@@ -23,82 +23,29 @@ function ClientScreens:init(controller)
 		[self.controller.constants.Screen.GAME_OVER] = self.playerGui:WaitForChild("ScreenGameOver"),
 	}
 
-	-- Cache MENU slideshow panel
-	do
-		local menuGui = self.screens[self.controller.constants.Screen.MENU]
-		self.startButton = menuGui:WaitForChild("StartButton")
-		self.textPlay = self.startButton:WaitForChild("TextLabel")
-		local remotes = self.controller.ReplicatedStorage:WaitForChild("RemoteEvents")
-		local requestStart = remotes:WaitForChild("RequestStart")
-		
-		self.startButton.MouseButton1Click:Connect(function()
-			self.startButton.Active = false
-			self.startButton.AutoButtonColor = false
-
-			local ok, reason = requestStart:InvokeServer()
-			if not ok then
-				warn("[Client] Start denied:", reason)
-
-				-- Replace this with your UI message label if you have one
-				self.startButton.Text = reason or self.i18n:t("menu.cannot")
-				task.wait(1.5)
-				self.startButton.Text = self.i18n:t("menu.play")
-			end
-
-			self.startButton.Active = true
-			self.startButton.AutoButtonColor = true
-		end)
-	end
+	-- Cache MENU
+	self.ScreenMenu = require(script.Parent.Screens.ScreenMenu)
+	self.ScreenMenu:init(self, self.screens[self.controller.constants.Screen.MENU])		
 
 	-- Cache LOAD
-	do
-		local loadGui = self.screens[self.controller.constants.Screen.LOAD]
-		self.textLoading = loadGui:WaitForChild("TextLabel")
-	end
-	
+	self.ScreenLoading = require(script.Parent.Screens.ScreenLoading)
+	self.ScreenLoading:init(self, self.screens[self.controller.constants.Screen.LOAD])		
+
 	-- Cache GAME HUD
-	do
-		local gameGui = self.screens[self.controller.constants.Screen.GAME]
-		local gameHUD = gameGui:WaitForChild("GameHUD")
-		self.gameTime = gameHUD:WaitForChild("Time")
-		self.buttonAskForBall = gameGui:WaitForChild("ButtonAskForBall") 
-
-		self.buttonAskForBall.MouseButton1Click:Connect(function() 
-			if self.buttonAskForBall.Active then 
-				self.buttonAskForBall.Active = false 
-				self.buttonAskForBall.AutoButtonColor = false 
-				self.controller.Events:sendEvent(self.controller.constants.Events.REQUEST_NEW_BALL, "")
-				task.wait(0.5) 
-				self.buttonAskForBall.Active = true 
-				self.buttonAskForBall.AutoButtonColor = true
-			end 
-		end)
-
-		gameHUD.MouseButton1Click:Connect(function()
-			if gameHUD.Active then
-				gameHUD.Active = false
-				gameHUD.AutoButtonColor = false
-
-				self.controller.Events:sendEvent(self.controller.constants.Events.REQUEST_FORCE_END, {
-					name = self.controller.localPlayer.Name,
-					team = self.controller.localPlayer.Team.Name
-				})
-				task.wait(0.5)
-
-				gameHUD.Active = true
-				gameHUD.AutoButtonColor = true
-			end	
-		end)
-
-	end
+	self.ScreenGame = require(script.Parent.Screens.ScreenGame)
+	self.ScreenGame:init(self, self.screens[self.controller.constants.Screen.GAME])		
 
 	-- Cache GAME_OVER HUD
-	do
-		local gameGui = self.screens[self.controller.constants.Screen.GAME_OVER]
-		local gameOverHUD = gameGui:WaitForChild("GameOverHUD")
-		self.reloadingGame = gameOverHUD:WaitForChild("ReloadingGame")
-	end
+	self.ScreenGameOver = require(script.Parent.Screens.ScreenGameOver)
+	self.ScreenGameOver:init(self, self.screens[self.controller.constants.Screen.GAME_OVER])		
 
+	self.Screens = {
+		self.ScreenMenu,
+		self.ScreenLoading,
+		self.ScreenGame,
+		self.ScreenGameOver
+	}
+	
 	-- Start with everything hidden, then show MENU by default
 	self:hideAll()
 	self:show(self.controller.constants.Screen.MENU)
@@ -106,8 +53,11 @@ function ClientScreens:init(controller)
 end
 
 function ClientScreens:setUpTexts()
-	self.textPlay.Text = self.i18n:t("menu.play")
-	self.textLoading.Text = self.i18n:t("loading.loading")
+	for _, screen in ipairs(self.Screens) do
+		if screen.setUpTexts then
+			screen:setUpTexts()
+		end
+	end
 end
 
 function ClientScreens:hideAll()
@@ -133,13 +83,11 @@ function ClientScreens:showForPhase(phase: string)
 end
 
 function ClientScreens:updateGameTime(time: number)
-	self.gameTime.Text = self.controller.utilities:getFormattedTimeMinutes(time)
+	self.ScreenGame:updateGameTime(time)
 end
 
 function ClientScreens:showCoundownReload(timeToReload: number) 
-	if timeToReload >= 0 then
-		self.reloadingGame.Text = self.i18n:t("game_over.reloading") .. tostring(timeToReload) .. "s"
-	end
+	self.ScreenGameOver:showCoundownReload(timeToReload)
 end
 
 return setmetatable({}, ClientScreens)
