@@ -50,6 +50,7 @@ function ClientStateChanged:onPhaseChanged(oldPhase: string, newPhase: string, d
 			self.controller.Screens:showForPhase(self.controller.constants.Screen.GAME)
 			self.controller.Actions:unfreezeHumanoid()
 			self.controller.Screens:updateGameTime(self.controller.constants.Game.GAME_TIME)
+			self.controller.Screens.ScreenGame:updateScore(self.controller.scoreRed, self.controller.scoreBlue) 
 		elseif newPhase == self.controller.constants.Phase.GAME_OVER then
 			if self.enable_debug_messages then 
 				print("[ClientStateChanged:onPhaseChanged] STATE GAME_OVER: show results")

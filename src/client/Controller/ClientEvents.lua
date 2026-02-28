@@ -43,6 +43,13 @@ function ClientEvents:onListenEvent(event: string, data: any)
 	if event == self.controller.constants.Events.BALL_TAKEN then
 		self.controller.Audio:play2D(self.controller.constants.Sounds.SOUND_FX_OUCH) 
 	end	
+	-- EVAL GOAL_SCORED
+	if event == self.controller.constants.Events.GOAL_SCORED then
+		-- print("GOAL SCORED FOR TEAM = ", tostring(data.team)) 
+		self.controller.scoreRed = data.red 
+		self.controller.scoreBlue = data.blue
+		self.controller.Screens.ScreenGame:updateScore(self.controller.scoreRed, self.controller.scoreBlue) 
+	end	
 end
 
 function ClientEvents:onPhaseChanged(newPhase: string, data: any)

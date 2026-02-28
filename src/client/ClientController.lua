@@ -41,6 +41,9 @@ function ClientController.get()
 	self.Screens = nil
 	self.Audio = nil
 
+	self.scoreRed = 0
+	self.scoreBlue = 0
+
 	_instance = self
 	return self
 end

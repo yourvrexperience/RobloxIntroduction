@@ -6,6 +6,9 @@ function ScreenGame:init(screens, gameGui)
     local gameHUD = gameGui:WaitForChild("GameHUD")
     self.gameTime = gameHUD:WaitForChild("Time")
     
+    self.scoreTeamRed = gameHUD:WaitForChild("ScoreTeamRed") 
+    self.scoreTeamBlue = gameHUD:WaitForChild("ScoreTeamBlue") 
+
     gameHUD.MouseButton1Click:Connect(function()
         if gameHUD.Active then
             gameHUD.Active = false
@@ -21,21 +24,6 @@ function ScreenGame:init(screens, gameGui)
             gameHUD.AutoButtonColor = true
         end	
     end)
-
-    self.buttonAskForBall = gameGui:WaitForChild("ButtonAskForBall")
-    self.buttonAskForBall.MouseButton1Click:Connect(function()
-        if self.buttonAskForBall.Active then
-            self.buttonAskForBall.Active = false
-            self.buttonAskForBall.AutoButtonColor = false
-            
-            self.screens.controller.Events:sendEvent(self.screens.controller.constants.Events.REQUEST_NEW_BALL, "")
-            task.wait(0.5)
-
-            self.buttonAskForBall.Active = true
-            self.buttonAskForBall.AutoButtonColor = true
-        end
-    end)
-
 end
 
 function ScreenGame:updateGameTime(time: number)
@@ -44,6 +32,11 @@ end
 
 function ScreenGame:setUpTexts()
 	-- self.textGame.Text = self.i18n:t("game.game")
+end
+
+function ScreenGame:updateScore(scoreRed: number, scoreBlue: number) 
+    self.scoreTeamRed.Text = self.screens.i18n:t("game.red_team") .. tostring(scoreRed) 
+    self.scoreTeamBlue.Text = self.screens.i18n:t("game.blue_team") .. tostring(scoreBlue) 
 end
 
 return setmetatable({}, ScreenGame)
