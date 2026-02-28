@@ -31,6 +31,7 @@ Constants.Events = {
 	GOAL_SCORED = "GOAL_SCORED",
 	PLAYER_HITS_BALL = "PLAYER_HITS_BALL", 
 	REQUEST_NEW_BALL = "REQUEST_NEW_BALL", 
+	SPAWN_POSITION = "SPAWN_POSITION", 
 }
 
 -- =========================

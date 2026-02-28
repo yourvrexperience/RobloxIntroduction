@@ -26,6 +26,21 @@ function ServerState:enterLoad()
 	c.isTransitioning = true
 	local playerList = c.Players:GetPlayers()
 
+	-- Send spawn positions to players 
+	local counterPlayerRed = 0 
+	local counterPlayerBlue = 0 
+	for _, p in ipairs(playerList) do 
+		if p.Character then 
+			if p.Team == self.controller.constants.Team.RED then
+				counterPlayerRed += 1 
+				c.Events:sendTo(p, c.constants.Events.SPAWN_POSITION, tostring(counterPlayerRed))
+			else
+				counterPlayerBlue += 1 
+				c.Events:sendTo(p, c.constants.Events.SPAWN_POSITION, tostring(counterPlayerBlue))
+			end
+		end 
+	end
+
 	task.wait(0.2)
 	self:setPhase(c.constants.Phase.LOAD, "")
 

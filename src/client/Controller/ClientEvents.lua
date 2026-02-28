@@ -54,6 +54,10 @@ function ClientEvents:onListenEvent(event: string, data: any)
 			self.controller.Screens:showGoalScored()
 		end
 	end	
+	-- EVAL SPAWN_POSITION 
+	if event == self.controller.constants.Events.SPAWN_POSITION then 
+		self.controller.Actions:teleportIntoFieldSpawn(tonumber(data))
+	end	
 end
 
 function ClientEvents:onPhaseChanged(newPhase: string, data: any)
