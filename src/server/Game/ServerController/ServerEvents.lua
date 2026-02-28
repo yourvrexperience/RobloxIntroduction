@@ -62,7 +62,9 @@ function ServerEvents:onClientEvent(player: Player, event: string, data: any)
 	if event == self.controller.constants.Events.REQUEST_STATE then
 		self:sendTo(player, self.controller.constants.Events.RESPONSE_STATE, { 
 																				state = self.controller.currentPhase,
-																				time = self.controller.ServerUpdate.remainingTime			
+																				time = self.controller.ServerUpdate.remainingTime,
+																				red = self.controller.scoreTeamRed, 
+																				blue = self.controller.scoreTeamBlue, 																						
 																				})
 		return
 	end

@@ -90,4 +90,13 @@ Constants.Ball = {
 	),
 }
 
+-- ========================= 
+-- FIELD 
+-- ========================= 
+Constants.Field = 
+{ 
+	CENTER_FIELD = CFrame.new(0, 20, 0), 
+	OUTSIDE_FIELD = CFrame.new(0, 20, 31), 
+}
+
 return Constants

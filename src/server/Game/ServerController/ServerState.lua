@@ -106,6 +106,8 @@ function ServerState:reloadMenu()
 		c.PlayerCollision:resetRound()
 	end
 
+	c.Events:broadcast(c.constants.Events.TELEPORT_INSIDE_FIELD)
+	
 	c.isTransitioning = false
 end
 

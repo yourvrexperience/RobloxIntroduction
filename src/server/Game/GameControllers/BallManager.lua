@@ -36,7 +36,7 @@ function BallManager:createRandomBall()
 	local id = self._nextId
 
 	local ball = setmetatable({}, Ball)
-	local spawnCFrame = CFrame.new(0, 10, math.random(0, 70) - 35)
+	local spawnCFrame = CFrame.new(0, 10, math.random(0, 50) - 25)
 	ball:init(self.controller)
 	ball:spawnBall(spawnCFrame)
 	ball.ballId = id

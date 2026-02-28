@@ -31,6 +31,15 @@ function ClientEvents:onListenEvent(event: string, data: any)
 			print(("[ClientEvents:onListenEvent] state %s, time (%s)"):format(data.state, tostring(data.time)))		
 		end
 		self:onPhaseChanged(data.state, data)
+		if self.controller.currentPhase == self.controller.constants.Phase.MENU then 
+			self.controller.Actions:teleportCenterField() 
+		else 
+			self.controller.scoreRed = data.red 
+			self.controller.scoreBlue = data.blue 
+			self.controller.Update.remainingTime = data.time 
+			self.controller.Screens.ScreenGame:updateScore(self.controller.scoreRed, self.controller.scoreBlue) 
+			self.controller.Screens:updateGameTime(self.controller.Update.remainingTime) 
+		end		
 	end
 	-- EVAL PLAYER_HITS_BALL 
 	if event == self.controller.constants.Events.PLAYER_HITS_BALL then
@@ -57,6 +66,10 @@ function ClientEvents:onListenEvent(event: string, data: any)
 	-- EVAL SPAWN_POSITION 
 	if event == self.controller.constants.Events.SPAWN_POSITION then 
 		self.controller.Actions:teleportIntoFieldSpawn(tonumber(data))
+	end	
+	-- EVAL TELEPORT_INSIDE_FIELD 
+	if event == self.controller.constants.Events.TELEPORT_INSIDE_FIELD then 
+		self.controller.Actions:teleportIntoFieldRandom() 
 	end	
 end
 

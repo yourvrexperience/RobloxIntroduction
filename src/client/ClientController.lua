@@ -26,7 +26,7 @@ function ClientController.get()
 	self.localPlayer.CharacterAdded:Connect(function(character)
 		self.localHumanoid = character:WaitForChild("Humanoid")
 		self.humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-		-- self.humanoidRootPart.CFrame = self.constants.Field.OUTSIDE_FIELD -- SET THE INITIAL POSITION OF THE PLAYER
+		self.humanoidRootPart.CFrame = self.constants.Field.OUTSIDE_FIELD -- SET THE INITIAL POSITION OF THE PLAYER
 	end)
 	
 	-- Local state
