@@ -50,6 +50,9 @@ function ClientEvents:onListenEvent(event: string, data: any)
 		self.controller.scoreBlue = data.blue
 		self.controller.Audio:play2D(self.controller.constants.Sounds.SOUND_PLAYER_SCORE)
 		self.controller.Screens.ScreenGame:updateScore(self.controller.scoreRed, self.controller.scoreBlue) 
+		if self.controller.localPlayer.Team.Name == data.team then
+			self.controller.Screens:showGoalScored()
+		end
 	end	
 end
 

@@ -23,6 +23,8 @@ function ClientScreens:init(controller)
 		[self.controller.constants.Screen.GAME_OVER] = self.playerGui:WaitForChild("ScreenGameOver"),
 	}
 
+	self.goalScoredScreen = self.playerGui:WaitForChild("ScreenGoalScored") 
+
 	-- Cache MENU
 	self.ScreenMenu = require(script.Parent.Screens.ScreenMenu)
 	self.ScreenMenu:init(self, self.screens[self.controller.constants.Screen.MENU])		
@@ -64,6 +66,8 @@ function ClientScreens:hideAll()
 	for _, gui in pairs(self.screens) do
 		gui.Enabled = false
 	end
+
+	self.goalScoredScreen.Enabled = false 
 end
 
 -- key can be "MENU"/"LOAD"/"GAME"/"GAME_OVER"
@@ -88,6 +92,17 @@ end
 
 function ClientScreens:showCoundownReload(timeToReload: number) 
 	self.ScreenGameOver:showCoundownReload(timeToReload)
+end
+
+function ClientScreens:showGoalScored() 
+	self:hideAll() 
+	self.goalScoredScreen.Enabled = true 
+
+	-- Hide after a short delay 
+	task.delay(3, function() 
+		self.goalScoredScreen.Enabled = false 
+		self:show(self.controller.currentPhase) 
+	end) 
 end
 
 return setmetatable({}, ClientScreens)
