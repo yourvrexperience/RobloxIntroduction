@@ -17,6 +17,7 @@ Constants.Sounds = {
 	SOUND_GAME_OVER = "SoundGameEnds",
 	SOUND_FX_KICK = "SoundFxKick",
 	SOUND_FX_OUCH = "SoundFxOuch",
+	SOUND_PLAYER_SCORE = "SoundFxGoal", 
 }
 
 -- =========================

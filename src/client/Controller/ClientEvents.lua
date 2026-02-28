@@ -48,6 +48,7 @@ function ClientEvents:onListenEvent(event: string, data: any)
 		-- print("GOAL SCORED FOR TEAM = ", tostring(data.team)) 
 		self.controller.scoreRed = data.red 
 		self.controller.scoreBlue = data.blue
+		self.controller.Audio:play2D(self.controller.constants.Sounds.SOUND_PLAYER_SCORE)
 		self.controller.Screens.ScreenGame:updateScore(self.controller.scoreRed, self.controller.scoreBlue) 
 	end	
 end
