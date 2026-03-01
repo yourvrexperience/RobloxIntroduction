@@ -4,6 +4,8 @@ A hands-on course for experienced game developers (Unity, Unreal Engine, Godot, 
 
 Build a fully functional **multiplayer rugby game** where players pick up balls, carry them into the rival team's goal, and tackle opponents — all while learning Roblox's architecture, networking, and tooling.
 
+[Start the video session now!](https://www.yourvrexperience.com/roblox-introduction-for-game-developers/)
+
 ---
 
 ## 🎯 What You Will Learn
