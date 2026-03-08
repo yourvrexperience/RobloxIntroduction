@@ -41,11 +41,10 @@ function ServerState:enterLoad()
 		end 
 	end
 
-	task.wait(0.2)
+	task.wait(0.5)
 	self:setPhase(c.constants.Phase.LOAD, "")
 
-	-- Loading/Initializing resources
-	c.TeamAssignment:assignTeams(playerList)
+	-- Loading/Initializing resources	
 	c.TeamAssignment:setupAllMarkers()
 	-- self.controller.BallSpawner:respawn(6)
 	-- self.controller.Ball:spawnBall(CFrame.new(10, 10, 0)) 
@@ -59,6 +58,8 @@ function ServerState:enterLoad()
 	for i = 1, totalBalls do 
 		self.controller.BallManager:createRandomBall() 
 	end 
+
+	c.TeamAssignment:HideTeamAreas()
 
 	-- Change to GAME
 	task.wait(1)
@@ -105,6 +106,8 @@ function ServerState:reloadMenu()
 	if c.PlayerCollision then
 		c.PlayerCollision:resetRound()
 	end
+
+	c.TeamAssignment:ShowTeamAreas()
 
 	c.Events:broadcast(c.constants.Events.TELEPORT_INSIDE_FIELD)
 	

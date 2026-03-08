@@ -59,7 +59,7 @@ function ClientActions:teleportIntoFieldSpawn(position: number)
 		spawnPositionsFinal = self.spawnPositionsRed
 	end
 	
-	local finalPosition = spawnPositionsFinal[position]
+	local finalPosition = Vector3.new(spawnPositionsFinal[position].x,spawnPositionsFinal[position].y + 10,spawnPositionsFinal[position].z)
 	self.controller.humanoidRootPart.CFrame = CFrame.new(finalPosition)
 end
 
@@ -76,7 +76,7 @@ function ClientActions:teleportIntoFieldRandom()
 		finalList = self.spawnPositionsRed
 	end	 
 
-	local finalPosition = finalList[finalIndex]
+	local finalPosition = Vector3.new(finalList[finalIndex].x,finalList[finalIndex].y + 10,finalList[finalIndex].z)
 	self.controller.humanoidRootPart.CFrame = CFrame.new(finalPosition)
 end
 

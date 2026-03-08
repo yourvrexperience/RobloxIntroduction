@@ -17,6 +17,7 @@ function Controller.get()
 	self.Players = game:GetService("Players")
 	self.Teams = game:GetService("Teams")
 	self.ReplicatedStorage = game:GetService("ReplicatedStorage")
+	self.Workspace = game:GetService("Workspace")
 
 	self.constants = require(self.ReplicatedStorage.Shared.Constants)
 	self.utilities = require(self.ReplicatedStorage.Shared.Utilities)

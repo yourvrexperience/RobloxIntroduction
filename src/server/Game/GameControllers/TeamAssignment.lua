@@ -11,13 +11,56 @@ function TeamAssignment:init(controller)
 	self.teamBlue = controller.Teams:WaitForChild(self.controller.constants.Team.BLUE)
 	self._charAddedConn = {}
 	self.enable_debug_messages = false
+
+    self.redTeamArea = self.controller.Workspace:WaitForChild("TeamAssignment"):WaitForChild("RedTeam")
+    self.blueTeamArea = self.controller.Workspace:WaitForChild("TeamAssignment"):WaitForChild("BlueTeam")
+
+	-- Store connection references
+	self.redTeamAreaConn  = nil
+	self.blueTeamAreaConn = nil
+
+	self:ShowTeamAreas()
 end
 
-function TeamAssignment:assignTeams(playersList: { Player })
-	-- Deterministic split; replace with shuffle later if desired
-	for i, p in ipairs(playersList) do
-		p.Team = (i % 2 == 1) and self.teamRed or self.teamBlue
+function TeamAssignment:HideTeamAreas()
+    self.redTeamArea.Transparency = 1
+    self.redTeamArea.CanCollide = false
+    self.blueTeamArea.Transparency = 1
+    self.blueTeamArea.CanCollide = false
+
+	-- Disconnect using the stored connection references
+	if self.redTeamAreaConn then
+		self.redTeamAreaConn:Disconnect()
+		self.redTeamAreaConn = nil
 	end
+
+	if self.blueTeamAreaConn then
+		self.blueTeamAreaConn:Disconnect()
+		self.blueTeamAreaConn = nil
+	end
+end
+
+function TeamAssignment:ShowTeamAreas()
+    self.redTeamArea.Transparency = 0.5
+    self.redTeamArea.CanCollide = true
+    self.blueTeamArea.Transparency = 0.5
+    self.blueTeamArea.CanCollide = true
+
+    self.redTeamAreaConn = self.redTeamArea.Touched:Connect(function(hit)
+        local character = hit.Parent
+        if character and character:IsA("Model") then
+            local player = self.controller.Players:GetPlayerFromCharacter(character)
+            player.Team = self.teamRed
+        end
+    end)
+
+    self.blueTeamAreaConn = self.blueTeamArea.Touched:Connect(function(hit)
+        local character = hit.Parent
+        if character and character:IsA("Model") then
+            local player = self.controller.Players:GetPlayerFromCharacter(character)
+            player.Team = self.teamBlue
+        end
+    end)
 end
 
 local function removeMarker(character: Model)
