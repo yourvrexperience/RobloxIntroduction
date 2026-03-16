@@ -60,6 +60,13 @@ function ClientController:init()
 	self.Screens = require(script.Parent.Controller.ClientScreens)
 	self.Audio = require(script.Parent.Controller.ClientAudio)
 
+	self.EventBus = require(self.ReplicatedStorage.Shared.EventBus)
+	self.eventBus  = self.EventBus.new()
+
+	-- VIRTUAL REALITY
+	self.VRController = require(self.ReplicatedStorage.Shared.VRController)
+	self.VRController:Init(self.eventBus)
+
 	self.Screens:init(self)
 	self.StateChanged:init(self)
 	self.Events:init(self)
@@ -67,6 +74,8 @@ function ClientController:init()
 	self.Update:init(self)	
 	self.Audio:init(self)
 	print("[ClientController] Initialized. Phase =", self.currentPhase)
+
+
 end
 
 return ClientController

@@ -88,8 +88,8 @@ function ClientEvents:sendEvent(text: string, data: any)
 	self.clientEvents:FireServer(text, data)
 end
 
-function ClientEvents:throwBall() 
-	self.throwBallRemote:FireServer() 
+function ClientEvents:throwBall(data: any) 
+	self.throwBallRemote:FireServer(data) 
 end
 
 return setmetatable({}, ClientEvents)

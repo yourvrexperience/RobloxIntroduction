@@ -1,3 +1,6 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local VRController = require(ReplicatedStorage.Shared.VRController)
+
 local ClientStateChanged = {}
 ClientStateChanged.__index = ClientStateChanged
 
@@ -54,12 +57,18 @@ function ClientStateChanged:onPhaseChanged(oldPhase: string, newPhase: string, d
 			if self.controller.isMobile then
 				self.controller.Screens:showMobileGUI()
 			end
+			if VRController.isVR then
+				self.controller.Actions:toggleFirstPerson()
+			end			
 		elseif newPhase == self.controller.constants.Phase.GAME_OVER then
 			if self.enable_debug_messages then 
 				print("[ClientStateChanged:onPhaseChanged] STATE GAME_OVER: show results")
 			end
 			self.controller.Screens:showForPhase(self.controller.constants.Screen.GAME_OVER)
 			self.controller.Audio:play2D(self.controller.constants.Sounds.SOUND_GAME_OVER)
+			if VRController.isVR then
+				self.controller.Actions:restoreThirdPerson()
+			end			
 		end	
 	end	
 end

@@ -1,4 +1,7 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
+
+local VRController = require(ReplicatedStorage.Shared.VRController)
 
 local ClientActions = {}
 ClientActions.__index = ClientActions
@@ -13,7 +16,14 @@ function ClientActions:init(controller)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
 			if controller.currentPhase == controller.constants.Phase.GAME then
 				self.controller.Audio:play2D(self.controller.constants.Sounds.SOUND_FX_KICK)
-				self.controller.Events:throwBall()
+				if VRController.isVR then
+					self.controller.Events:throwBall({ 
+						origin = self.controller.Update.positionOrigin,
+						direction = self.controller.VRController:VRDirection()
+					})
+				else
+					self.controller.Events:throwBall(nil)
+				end
 			end
 		end
 	end)	
@@ -82,6 +92,27 @@ end
 
 function ClientActions:teleportCenterField()	
 	self.controller.humanoidRootPart.CFrame = self.controller.constants.Field.CENTER_FIELD
+end
+
+function ClientActions:toggleFirstPerson()
+	self.isFirstPerson = not self.isFirstPerson
+	if self.isFirstPerson then
+		self.controller.localPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
+	else
+		self.controller.localPlayer.CameraMode = Enum.CameraMode.Classic
+		self.controller.localPlayer.CameraMaxZoomDistance = 128
+
+		-- Force minimum zoom to push camera back, then release it
+        self.controller.localPlayer.CameraMinZoomDistance = 12
+        task.wait(0.1) -- let Roblox apply the zoom
+        self.controller.localPlayer.CameraMinZoomDistance = 0
+	end
+end
+
+function ClientActions:restoreThirdPerson()
+	if self.isFirstPerson then
+		self:toggleFirstPerson()
+	end
 end
 
 return setmetatable({}, ClientActions)

@@ -11,8 +11,8 @@ function ServerEvents:init(controller)
 	self.serverEvents = remotes:WaitForChild("ServerEvents")
 	self.throwBallRemote = remotes:WaitForChild("ThrowBall")
 
-	self.throwBallRemote.OnServerEvent:Connect(function(player)
-		self.controller.BallManager:onThrowRequest(player)
+	self.throwBallRemote.OnServerEvent:Connect(function(player, data)
+		self.controller.BallManager:onThrowRequest(player, data)
  	end)
  	
 	-- Bind start request here (only once per server)

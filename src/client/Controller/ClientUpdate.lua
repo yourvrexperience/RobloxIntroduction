@@ -1,3 +1,6 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local VRController = require(ReplicatedStorage.Shared.VRController)
+
 -- ClientUpdate.lua
 -- Handles the main update loop for the client, managing state transitions and timers for the Capture the
 local RunService = game:GetService("RunService")
@@ -14,6 +17,16 @@ function ClientUpdate:init(controller)
 	
 	self.enable_debug_messages = false
 	
+	if VRController.isVR then
+		self.controller.eventBus:on(VRController.Events.VR_TRACKING_UPDATE, function(data)
+			if data.isRighHand then
+				self.positionOrigin = data.rightCFrame.Position
+			else
+				self.positionOrigin = data.leftCFrame.Position
+			end
+		end)
+	end
+
 	self:start()
 end
 

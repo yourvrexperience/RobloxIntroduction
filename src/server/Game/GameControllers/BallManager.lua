@@ -67,11 +67,11 @@ function BallManager:destroyAll()
 	self.carrierToBallId = {}
 end
 
-function BallManager:onThrowRequest(player: Player)
+function BallManager:onThrowRequest(player: Player, data:any)
 	local ball = self:getCarriedBall(player)
 	if not ball then return end
 	
-	ball:ThrowRequest(player)
+	ball:ThrowRequest(player, data)
 end
 
 -- =========================

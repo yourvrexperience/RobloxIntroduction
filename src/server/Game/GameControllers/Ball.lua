@@ -206,7 +206,29 @@ function Ball:throw(player: Player, forwardSpeed: number, sideSpeed: number, upw
 	ball.AssemblyLinearVelocity = v
 end
 
-function Ball:ThrowRequest(player: Player)
+function Ball:throwDirection(player: Player, origin: Vector3, direction:Vector3)
+	local ball = self.ball
+	if not ball then return end
+
+	local carrier = self:getCarrier()
+	if not carrier or not carrier.Character then
+		return
+	end
+
+	local hrp = carrier.Character:FindFirstChild("HumanoidRootPart")
+	if not hrp then return end
+
+	-- Release first
+	self:drop(player)
+	
+	local v = direction.Unit * self.controller.constants.Ball.FORWARD_SPEED
+
+	self.ball.CFrame = CFrame.new(origin)
+	ball.AssemblyLinearVelocity = v
+end
+
+
+function Ball:ThrowRequest(player: Player, data:any)
 	-- Is there a ball?
 	if not self.ball then return end
 
@@ -220,7 +242,11 @@ function Ball:ThrowRequest(player: Player)
 	local forwardSpeed = self.controller.constants.Ball.FORWARD_SPEED
 	local upwardSpeed = self.controller.constants.Ball.UPWARD_SPEED
 
-	self:throw(player, forwardSpeed, 0, upwardSpeed)
+	if data == nil then
+		self:throw(player, forwardSpeed, 0, upwardSpeed)
+	else
+		self:throwDirection(player, data.origin, data.direction)
+	end		
 end
 
 function Ball:forceThrowFromPlayer(player: Player)
