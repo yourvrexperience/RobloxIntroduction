@@ -17,7 +17,8 @@ return [[
     "game": {
       "score": "Score",
       "red_team": "Red team: ",
-      "blue_team": "Blue team: "      
+      "blue_team": "Blue team: ",
+      "throw": "Throw"      
     },
     "game_over": {
       "finalscore": "Final Score",
@@ -42,7 +43,8 @@ return [[
     "game": {
       "score": "Puntuación",
       "red_team": "Equipo Rojo: ",
-      "blue_team": "Equipo Azul: "
+      "blue_team": "Equipo Azul: ",
+      "throw": "Lanzar"
     },
     "game_over": {
       "finalscore": "Puntuación final",

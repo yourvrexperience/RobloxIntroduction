@@ -71,6 +71,13 @@ function ClientEvents:onListenEvent(event: string, data: any)
 	if event == self.controller.constants.Events.TELEPORT_INSIDE_FIELD then 
 		self.controller.Actions:teleportIntoFieldRandom() 
 	end	
+	-- EVAL BALL_GRABBED
+	if event == self.controller.constants.Events.BALL_GRABBED then
+		if self.controller.isMobile then
+			self.controller.Screens:showMobileGUI()
+			self.controller.Screens:showMobileButton()
+		end
+	end		
 end
 
 function ClientEvents:onPhaseChanged(newPhase: string, data: any)

@@ -29,6 +29,10 @@ function ClientController.get()
 		self.humanoidRootPart.CFrame = self.constants.Field.OUTSIDE_FIELD -- SET THE INITIAL POSITION OF THE PLAYER
 	end)
 	
+	self.isMobile = self.UserInputService.TouchEnabled 
+             and not self.UserInputService.KeyboardEnabled 
+             and not self.UserInputService.MouseEnabled
+
 	-- Local state
 	self.currentPhase = self.constants.Phase.INIT	
 	self.team = nil -- later: string/TeamColor/etc...

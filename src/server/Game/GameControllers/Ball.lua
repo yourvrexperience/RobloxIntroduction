@@ -146,6 +146,8 @@ function Ball:pickup(player: Player)
 	-- Tune offset to your liking:
 	local offset = self.controller.constants.Ball.CARRY_OFFSET
 	ball.CFrame = hrp.CFrame * offset
+
+	self.controller.Events:sendTo(player, self.controller.constants.Events.BALL_GRABBED)
 end
 
 function Ball:drop(player: Player, delaySeconds: number?)

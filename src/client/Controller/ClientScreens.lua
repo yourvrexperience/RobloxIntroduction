@@ -41,17 +41,55 @@ function ClientScreens:init(controller)
 	self.ScreenGameOver = require(script.Parent.Screens.ScreenGameOver)
 	self.ScreenGameOver:init(self, self.screens[self.controller.constants.Screen.GAME_OVER])		
 
+	-- Cache MOBILE HUD
+	self.guiMobileHUD = self.playerGui:WaitForChild("MobileGui") 
+	self.MobileHud = require(script.Parent.Screens.MobileHUD)	
+	self.MobileHud:init(self, self.guiMobileHUD)		
+
 	self.Screens = {
 		self.ScreenMenu,
 		self.ScreenLoading,
 		self.ScreenGame,
-		self.ScreenGameOver
+		self.ScreenGameOver,
+		self.MobileHud
 	}
 	
+	self.ScalesUIs = {
+		[1] = self:RegisterScaleUI(self.screens[self.controller.constants.Screen.MENU]),
+		[2] = self:RegisterScaleUI(self.screens[self.controller.constants.Screen.LOAD]),
+		[3] = self:RegisterScaleUI(self.screens[self.controller.constants.Screen.GAME]),
+		[4] = self:RegisterScaleUI(self.screens[self.controller.constants.Screen.GAME_OVER]),
+		[5] = self:RegisterScaleUI(self.goalScoredScreen),
+		[6] = self:RegisterScaleUI(self.guiMobileHUD)		
+	}
+
 	-- Start with everything hidden, then show MENU by default
 	self:hideAll()
 	self:show(self.controller.constants.Screen.MENU)
 	self:setUpTexts()
+
+	-- Update on resize	
+	workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(function()
+		self:updateScale()
+	end)
+	self:updateScale()	
+end
+
+function ClientScreens:RegisterScaleUI(screenGUI)
+	local uiScale = Instance.new("UIScale")
+	uiScale.Scale = 1.0  -- adjust as needed
+	uiScale.Parent = screenGUI
+	return uiScale
+end
+
+function ClientScreens:updateScale()
+    local screenSize = workspace.CurrentCamera.ViewportSize
+    local baseResolution = 720
+    for _, uiScale in pairs(self.ScalesUIs) do
+        if uiScale then
+            uiScale.Scale = screenSize.Y / baseResolution
+        end
+    end
 end
 
 function ClientScreens:setUpTexts()
@@ -68,6 +106,7 @@ function ClientScreens:hideAll()
 	end
 
 	self.goalScoredScreen.Enabled = false 
+	self.guiMobileHUD.Enabled = false
 end
 
 -- key can be "MENU"/"LOAD"/"GAME"/"GAME_OVER"
@@ -84,6 +123,18 @@ end
 
 function ClientScreens:showForPhase(phase: string)
 	self:show(phase)
+end
+
+function ClientScreens:showMobileGUI()
+	if self.controller.isMobile then
+		self.guiMobileHUD.Enabled = true
+	end
+end
+
+function ClientScreens:showMobileButton()
+	if self.controller.isMobile then
+		self.MobileHud:showButtonThrow()
+	end
 end
 
 function ClientScreens:updateGameTime(time: number)
